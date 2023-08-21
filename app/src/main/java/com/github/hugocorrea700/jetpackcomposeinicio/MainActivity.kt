@@ -27,8 +27,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
-fun Greeting(name: String) {
+fun Botao(name: String,
+descricao: String,
+quantia: Int,) {
     val expanded = remember { mutableStateOf(false)}
     val extraPadding = if (expanded.value) 48.dp else 0.dp
 
@@ -42,27 +45,52 @@ fun Greeting(name: String) {
                 .weight(1f)
                 .padding(bottom = extraPadding)
             ) {
-                Text(text = "BEM-VINDO, ")
                 Text(text = name)
+                Text(if (expanded.value) "Qntd: $quantia" else " ")
+                Text(if (expanded.value) "$descricao" else " ")
+
             }
             Button(
                 onClick = { expanded.value = !expanded.value },
             ) {
-                Text(if (expanded.value) "Esconder" else "Ver mais")
+                Text(if (expanded.value) "Ver menos" else "Ver mais")
             }
         }
     }
 }
 
-
+data class ItemCompra(
+    val nome : String,
+    val quant : Int,
+    val descr : String,
+)
 @Composable
 fun MyApp(
     modifier: Modifier = Modifier,
-    names: List<String> = listOf("World", "Compose")
+    listaCompra: List<ItemCompra> = listOf(
+        ItemCompra(nome= "Ovo",
+         quant= 4,
+          descr= "Redondo e branco com leves poros na superficie",),
+
+        ItemCompra(nome= "Melancia",
+            quant= 1,
+            descr= "Grande, verde, redonda e vermelha por dentro",),
+        ItemCompra(nome= "Jaca",
+            quant= 2,
+            descr= "Grande, amarela, espinhosa e com alto poder letal",),
+        ItemCompra(nome= "Mickey objeto misterioso",
+            quant= 1,
+            descr= "Alguma coisa chegou aqui, nao tenho ideia de o que",),
+        ItemCompra(nome= "Papel Higienico",
+            quant= 10000,
+            descr= "Rolo de 60m de comprimento com papel branco áspero com poder de lixa",),
+)
 ) {
     Column(modifier = modifier.padding(vertical = 4.dp)) {
-        for (name in names) {
-            Greeting(name = name)
+        for (name in listaCompra) {
+            Botao(name = name.nome,
+                quantia = name.quant,
+                descricao = name.descr)
         }
     }
 }
@@ -78,28 +106,6 @@ fun DefaultPreview() {
     }
 }
 
-@Composable
-fun OnboardingScreen(
-    onContinueClicked: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Bem-vindo ao Basics Codelab!")
-        Button(
-            modifier = Modifier
-                .padding(vertical = 24.dp),
-            onClick = onContinueClicked
-        ) {
-            Text("Continuar")
-        }
-    }
-
-}
 
 
 @Preview
@@ -111,10 +117,3 @@ fun MyAppPreview() {
 }
 
 
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
-@Composable
-fun OnboardingPreview() {
-    JetpackcomposeinicioTheme() {
-        OnboardingScreen(onContinueClicked = {})
-    }
-}
